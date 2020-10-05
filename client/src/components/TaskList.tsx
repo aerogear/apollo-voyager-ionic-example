@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { Task } from './Task';
 import { IonList, IonToast } from '@ionic/react';
-import { useOfflineMutation } from 'react-offix-hooks';
 import { ITask } from '../declarations';
 import { Empty } from './Empty';
-import { mutationOptions } from '../helpers';
-import { updateTask, deleteTask } from '../graphql/generated';
+
 
 export const TaskList: React.FC<any> = ({ tasks }) => {
 
-  const [updateTaskMutation] = useOfflineMutation(updateTask, mutationOptions.updateTask);
-  const [deleteTaskMutation] = useOfflineMutation(deleteTask, mutationOptions.deleteTask);
+  // const [updateTaskMutation] = useOfflineMutation(updateTask, mutationOptions.updateTask);
+  // const [deleteTaskMutation] = useOfflineMutation(deleteTask, mutationOptions.deleteTask);
 
   const [showToast, setShowToast] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -28,17 +26,17 @@ export const TaskList: React.FC<any> = ({ tasks }) => {
 
   const handleDelete = (task: ITask) => {
     const { comments, __typename, createdAt, ...input } = task as any;
-    deleteTaskMutation({
-      variables: { input }
-    }).catch(handleError);
+    // deleteTaskMutation({
+    //   variables: { input }
+    // }).catch(handleError);
   };
 
   const handleUpdate = (task: ITask) => {
     const { comments, __typename, ...input } = task as any;
-    updateTaskMutation({
-      variables: { input }
-    })
-      .catch(handleError);
+    // updateTaskMutation({
+    //   variables: { input }
+    // })
+    //   .catch(handleError);
   }
 
   if (tasks.length < 1) {

@@ -13,6 +13,7 @@ input BooleanInput {
 
 """
 @model
+@datasync
 @crud(delete: false)
 @crud(update: false)
 """
@@ -23,6 +24,27 @@ type Comment {
 
   """@manyToOne(field: 'comments', key: 'noteId')"""
   note: Task
+
+  """@index(name: 'Datasync_lastUpdatedAt')"""
+  _lastUpdatedAt: GraphbackTimestamp
+  _version: Int
+}
+
+type CommentDelta {
+  _id: GraphbackObjectID!
+  message: String!
+  author: String!
+
+  """@index(name: 'Datasync_lastUpdatedAt')"""
+  _lastUpdatedAt: GraphbackTimestamp
+  _version: Int
+  _deleted: Boolean
+}
+
+type CommentDeltaList {
+  items: [CommentDelta]!
+  lastSync: GraphbackTimestamp!
+  limit: Int
 }
 
 input CommentFilter {
@@ -119,6 +141,7 @@ input MutateCommentInput {
   message: String
   author: String
   noteId: GraphbackObjectID
+  _version: Int!
 }
 
 input MutateTaskInput {
@@ -159,6 +182,7 @@ type Query {
   getComment(id: GraphbackObjectID!): Comment
   findComments(filter: CommentFilter, page: PageRequest, orderBy: OrderByInput): CommentResultList!
   syncTasks(lastSync: GraphbackTimestamp!, filter: TaskFilter, limit: Int): TaskDeltaList!
+  syncComments(lastSync: GraphbackTimestamp!, filter: CommentFilter, limit: Int): CommentDeltaList!
 }
 
 enum SortDirectionEnum {

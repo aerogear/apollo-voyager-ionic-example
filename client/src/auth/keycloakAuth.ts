@@ -1,5 +1,4 @@
 import Keycloak, { KeycloakInstance } from 'keycloak-js';
-import { ILogoutParams } from '../declarations';
 
 export let keycloak: KeycloakInstance | undefined;
 
@@ -13,7 +12,7 @@ export let keycloak: KeycloakInstance | undefined;
 export const getKeycloakInstance = async () => {
   if (!keycloak) await init();
   return keycloak;
-} 
+}
 
 /**
  * Initiate keycloak instance.
@@ -24,7 +23,7 @@ export const getKeycloakInstance = async () => {
  */
 export const init = async () => {
   try {
-    keycloak = new (Keycloak as any )();
+    keycloak = new (Keycloak as any)();
     if (keycloak) {
       await keycloak.init({
         onLoad: 'login-required'
@@ -77,12 +76,8 @@ const getKeyCloakToken = async () => {
  * @param client offix client
  *  
  */
-export const logout = async ({ keycloak, client: apolloClient } : ILogoutParams) => {
-  if(keycloak) {
+export const logout = async (keycloak: Keycloak.KeycloakInstance | undefined) => {
+  if (keycloak) {
     await keycloak.logout();
-    // clear offix client offline store
-    await apolloClient.resetStore();
-    // clear offix client cache
-    await apolloClient.cache.reset();
   }
 }

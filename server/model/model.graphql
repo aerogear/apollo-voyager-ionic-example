@@ -21,6 +21,7 @@ type Task {
 
 """
 @model
+@datasync
 @crud(delete: false)
 @crud(update: false)
 """

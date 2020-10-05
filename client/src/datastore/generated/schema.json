@@ -1,0 +1,94 @@
+{
+  "Task": {
+    "name": "Task",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "_id",
+    "properties": {
+      "_id": {
+        "type": "string",
+        "key": "_id",
+        "isRequired": true,
+        "primary": true
+      },
+      "title": {
+        "type": "string",
+        "key": "title",
+        "isRequired": true
+      },
+      "description": {
+        "type": "string",
+        "key": "description",
+        "isRequired": true
+      },
+      "status": {
+        "type": "any",
+        "key": "status"
+      },
+      "type": {
+        "type": "string",
+        "key": "type"
+      },
+      "priority": {
+        "type": "number",
+        "key": "priority"
+      },
+      "public": {
+        "type": "boolean",
+        "key": "public"
+      },
+      "startDate": {
+        "type": "any",
+        "key": "startDate"
+      },
+      "payload": {
+        "type": "any",
+        "key": "payload"
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_deleted": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      }
+    }
+  },
+  "Comment": {
+    "name": "Comment",
+    "version": 1,
+    "type": "object",
+    "primaryKey": "_id",
+    "properties": {
+      "_id": {
+        "type": "string",
+        "key": "_id",
+        "isRequired": true,
+        "primary": true
+      },
+      "message": {
+        "type": "string",
+        "key": "message",
+        "isRequired": true
+      },
+      "author": {
+        "type": "string",
+        "key": "author",
+        "isRequired": true
+      },
+      "_version": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      },
+      "_deleted": {
+        "type": "string",
+        "key": "_version",
+        "isRequired": true
+      }
+    }
+  }
+}

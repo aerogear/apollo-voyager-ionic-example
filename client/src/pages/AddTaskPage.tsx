@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { IonContent, IonToast, IonCard } from '@ionic/react';
-import { useOfflineMutation } from 'react-offix-hooks';
 import { Header } from '../components/Header';
-import { createTask } from '../graphql/generated';
 import { TaskForm } from '../forms/TaskForm';
-import { mutationOptions } from '../helpers';
+import { useAddTask } from '../datastore/hooks';
 
- 
+
 export const AddTaskPage: React.FC<RouteComponentProps> = ({ history, match }) => {
 
   const [showToast, setShowToast] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [createTaskMutation] = useOfflineMutation(createTask, mutationOptions.createTask);
+  const { isLoading: loading, error, data, save: createTask } = useAddTask()
+
+  console.log("Saved item", loading, error, data)
 
   const handleError = (error: any) => {
     if (error.offline) {
@@ -26,9 +26,7 @@ export const AddTaskPage: React.FC<RouteComponentProps> = ({ history, match }) =
   };
 
   const submit = (model: any) => {
-    createTaskMutation({
-      variables: { input: { ...model } }
-    })
+    createTask({ ...model })
       .then(() => history.push('/'))
       .catch(handleError);
   };

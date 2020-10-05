@@ -3,20 +3,18 @@ import { IonHeader, IonToolbar, IonButtons, IonTitle, IonToast, IonButton, IonIc
 import { person, exit, arrowBack } from 'ionicons/icons';
 import { AuthContext } from '../AuthContext';
 import { logout } from '../auth/keycloakAuth';
-import { useApolloOfflineClient } from 'react-offix-hooks';
 import { Link } from 'react-router-dom';
 
-export const Header : React.FC<{ title: string, backHref?: string, match: any, isOnline?: boolean }> = ({ title, backHref, match, isOnline }) => {
+export const Header: React.FC<{ title: string, backHref?: string, match: any, isOnline?: boolean }> = ({ title, backHref, match, isOnline }) => {
 
   const { url } = match;
 
-  const client = useApolloOfflineClient();
   const { keycloak } = useContext(AuthContext);
-  const [ showToast, setShowToast ] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleLogout = async () => {
     if (isOnline) {
-      await logout({ keycloak, client });
+      await logout(keycloak);
       return;
     }
     setShowToast(true);
@@ -29,7 +27,7 @@ export const Header : React.FC<{ title: string, backHref?: string, match: any, i
     <IonButtons slot="end">
       <Link to="/profile">
         <IonButton>
-          <IonIcon slot="icon-only" icon={person}  />
+          <IonIcon slot="icon-only" icon={person} />
         </IonButton>
       </Link>
       <IonButton onClick={handleLogout}>
@@ -44,20 +42,20 @@ export const Header : React.FC<{ title: string, backHref?: string, match: any, i
         <IonToolbar>
           {
             url !== '/tasks' &&
-            <Link 
-              to={backHref as string} 
+            <Link
+              to={backHref as string}
               slot="start"
               role="button"
             >
               <IonButtons>
                 <IonButton>
-                  <IonIcon icon={arrowBack}/>
+                  <IonIcon icon={arrowBack} />
                 </IonButton>
               </IonButtons>
             </Link>
           }
-          <IonTitle>{ title }</IonTitle>
-          {   buttons }
+          <IonTitle>{title}</IonTitle>
+          {buttons}
         </IonToolbar>
       </IonHeader>
       <IonToast

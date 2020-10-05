@@ -2,14 +2,11 @@ import React, { useContext, useState, useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { IonContent, IonLoading, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonList, IonItemGroup, IonItem, IonLabel, IonAvatar, IonToast } from '@ionic/react';
 import { Header } from '../components/Header';
-import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Empty } from '../components';
-import { createComment, getTask, findTasks } from '../graphql/generated';
 import { commentViewSchema, taskViewSchema } from '../forms/task';
 import { AutoForm, TextField } from "uniforms-ionic";
 import { AuthContext } from '../AuthContext';
-import { subscriptionOptions } from '../helpers';
-import { useNetworkStatus } from 'react-offix-hooks';
+import { useAddComment, useFindComments, useFindTasks } from '../datastore/hooks';
 
 export interface ViewMatchParams {
   id: string
@@ -17,22 +14,19 @@ export interface ViewMatchParams {
 
 export const ViewTaskPage: React.FC<RouteComponentProps<ViewMatchParams>> = ({ history, match }) => {
   const [showToast, setShowToast] = useState<boolean>(false);
-  const offline = !useNetworkStatus()
+  const offline = false;
   const { id } = match.params;
-  const [mounted, setMounted] = useState<boolean>(false);
   const { profile } = useContext(AuthContext);
-  const [createCommentMutation] = useMutation(
-    createComment, { refetchQueries: [{ query: findTasks }] }
-  );
+  const { save: createComment } = useAddComment();
   const userName = profile?.username || "Anonymous User";
 
   const submit = (model: any) => {
     if (offline) {
       setShowToast(offline)
     } else {
-      createCommentMutation({
-        variables: { input: { ...model, noteId: id } }
-      }).then((comment) => {
+      createComment({
+        ...model, noteId: id
+      }).then(() => {
         console.log("comment created")
       }).catch((error) => {
         console.log(error)
@@ -41,32 +35,39 @@ export const ViewTaskPage: React.FC<RouteComponentProps<ViewMatchParams>> = ({ h
 
   }
 
-  const { loading, error, data, subscribeToMore } = useQuery(getTask, {
-    variables: { id },
-    fetchPolicy: 'cache-only',
-  });
+  const { error: errorTasks, data,
+    subscribeToMore: subscribeToTasks } = useFindTasks(id);
+  //useFindComments({ noteId: id });
+  const { error: errorComments, data: dataComments,
+    subscribeToMore: subscribeToComments } = useFindComments();
+  console.log(dataComments);
 
-  useEffect(() => {
-    if (mounted) {
-      subscribeToMore(subscriptionOptions.addComment)
-    }
-    setMounted(true);
-    return () => setMounted(false);
-  }, [mounted, setMounted, subscribeToMore]);
+  //useEffect(() => {
+  //const tasksSub = subscribeToTasks();
+  //return () => {
+  //tasksSub.unsubscribe()
+  // }
+  //}, [data, subscribeToTasks]);
 
-  if (error) return <pre>{JSON.stringify(error)}</pre>;
+  // useEffect(() => {
+  //   const tasksSub = subscribeToTasks();
+  //   const commentSub = subscribeToComments();
+  //   return () => {
+  //     tasksSub.unsubscribe()
+  //     commentSub.unsubscribe();
+  //   }
+  // }, [dataComments, data, subscribeToTasks, subscribeToComments]);
 
-  if (loading) return <IonLoading
-    isOpen={loading}
-    message={'Loading...'}
-  />;
+  // if (errorTasks && errorComments) return (
+  //   <pre>{JSON.stringify(errorTasks)}
+  //     {JSON.stringify(errorComments)}</pre>);
 
-  if (data && data.getTask) {
-    const task = data.getTask;
+  if (data) {
+    const task = data;
     const Text = TextField as any;
     return (
       <>
-        <Header title="Task" backHref="/tasks" match={match} />
+        <Header title="Create Task" backHref="/tasks" match={match} />
         <IonContent>
           <IonCard>
             <IonCardHeader>

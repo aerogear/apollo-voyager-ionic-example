@@ -1,5 +1,3 @@
-import { ApolloOfflineClient } from "offix-client";
-
 export interface ITask {
   _id: string;
   version: number;
@@ -59,9 +57,4 @@ export interface IAuthHeaders {
   headers: {
     Authorization: String
   }
-}
-
-export interface ILogoutParams {
-  keycloak: Keycloak.KeycloakInstance | undefined,
-  client: ApolloOfflineClient
 }

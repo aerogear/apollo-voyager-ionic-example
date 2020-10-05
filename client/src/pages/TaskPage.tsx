@@ -1,45 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useEffect } from 'react';
+import { useFindTasks } from '../datastore/hooks';
 import { add } from 'ionicons/icons';
-import { 
-  IonPage, 
-  IonSegment, 
-  IonSegmentButton, 
-  IonLabel, 
-  IonIcon, 
+import {
+  IonPage,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+  IonIcon,
   IonFooter,
   IonLoading,
   IonFab,
   IonFabButton,
   IonContent,
 } from '@ionic/react';
-import { subscriptionOptions,  } from '../helpers';
+
 import { Empty, TaskList, NetworkBadge, OfflineQueueBadge, Header } from '../components';
 import { RouteComponentProps } from 'react-router';
-import { findTasks } from '../graphql/generated';
 import { Link } from 'react-router-dom';
-import { useNetworkStatus } from 'react-offix-hooks';
 
-export const TaskPage: React.FC<RouteComponentProps> = ({match}) => {
-
-  const [subscribed, setSubscribed] = useState<boolean>(false);
-  const { loading, error, data, subscribeToMore } = useQuery(findTasks, {
-    fetchPolicy: 'cache-and-network'
-  });
-  
-  const isOnline = useNetworkStatus();
+export const TaskPage: React.FC<RouteComponentProps> = ({ match }) => {
+  const isOnline = true;
+  const { isLoading: loading, error, data, subscribeToMore } = useFindTasks();
 
   useEffect(() => {
-    if (!subscribed) {
-      subscribeToMore(subscriptionOptions.add);
-      subscribeToMore(subscriptionOptions.edit);
-      subscribeToMore(subscriptionOptions.remove);
-      setSubscribed(true);
-    }
-  }, [subscribed, setSubscribed, subscribeToMore])
+    const subscription = subscribeToMore();
+    return () => subscription.unsubscribe();
+  }, [data, subscribeToMore]);
 
-  if (error && !error.networkError) {
-    return <pre>{ JSON.stringify(error) }</pre>
+  if (error && !error) {
+    return <pre>{JSON.stringify(error)}</pre>
   };
 
   if (loading) return <IonLoading
@@ -47,20 +36,20 @@ export const TaskPage: React.FC<RouteComponentProps> = ({match}) => {
     message={'Loading...'}
   />;
 
-  const content = (data && data.findTasks && data.findTasks.items) 
-    ? <TaskList tasks={data.findTasks.items} />
+  const content = (data && data.length > 0)
+    ? <TaskList tasks={data} />
     : <Empty message={<p>No tasks available</p>} />;
 
   return (
     <IonPage>
-      <Header title="Manage Tasks"  match={match} isOnline={isOnline} />
+      <Header title="Manage Tasks" match={match} isOnline={isOnline} />
       <IonContent className="ion-padding" >
         <IonSegment>
           <IonSegmentButton value="all">
             <IonLabel>All Tasks</IonLabel>
           </IonSegmentButton>
         </IonSegment>
-        { content }
+        {content}
         <IonFab vertical="bottom" horizontal="end" slot="fixed" style={{ 'marginBottom': '2em', 'marginRight': '1em' }}>
           <Link to="/addTask">
             <IonFabButton>
@@ -77,5 +66,5 @@ export const TaskPage: React.FC<RouteComponentProps> = ({match}) => {
       </IonFooter>
     </IonPage>
   );
-  
+
 };

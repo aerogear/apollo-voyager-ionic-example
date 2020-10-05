@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { IonLabel, IonButton, IonBadge } from '@ionic/react';
-import { useApolloOfflineClient } from 'react-offix-hooks';
 import { Link } from 'react-router-dom';
 
 export const OfflineQueueBadge: React.FC<any> = () => {
 
-  const client = useApolloOfflineClient();
   const [queue, setQueue] = useState(0);
 
   // eslint-disable-next-line
   useEffect(() => {
-    setQueue(client.queue.entries.length);
+    setQueue(0);
   });
 
   return (

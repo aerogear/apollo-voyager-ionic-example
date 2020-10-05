@@ -6,40 +6,31 @@ import {
   IonToast,
   IonCard,
 } from '@ionic/react';
-import { useOfflineMutation } from 'react-offix-hooks';
-import { useQuery } from '@apollo/react-hooks';
+
 import { Header } from '../components/Header';
 import { Empty } from '../components/Empty';
-import { getTask, updateTask } from '../graphql/generated';
 import { TaskForm } from '../forms/TaskForm';
-import { subscriptionOptions, mutationOptions } from '../helpers';
+import { useFindTasks } from '../datastore/hooks';
 
 export interface IUpdateMatchParams {
   id: string
 }
 
 export const UpdateTaskPage: React.FC<RouteComponentProps<IUpdateMatchParams>> = ({ history, match }) => {
-
   const { id } = match.params;
-  const [mounted, setMounted] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { loading, error, data, subscribeToMore } = useQuery(getTask, {
-    variables: { id },
-    fetchPolicy: 'cache-only',
-  });
 
+  const { isLoading: loading, error, data, subscribeToMore } = useFindTasks(id);
+  console.log(data);
   useEffect(() => {
-    if (mounted) {
-      subscribeToMore(subscriptionOptions.addComment)
-    }
-    setMounted(true);
-    return () => setMounted(false);
-  }, [mounted, setMounted, subscribeToMore]);
+    const subscription = subscribeToMore();
+    return () => subscription.unsubscribe();
+  }, [data, subscribeToMore]);
 
-  const [updateTaskMutation] = useOfflineMutation(
-    updateTask, mutationOptions.updateTask,
-  );
+  // const [updateTaskMutation] = useOfflineMutation(
+  //   updateTask, mutationOptions.updateTask,
+  // );
 
   const handleError = (error: any) => {
     if (error.offline) {
@@ -54,11 +45,11 @@ export const UpdateTaskPage: React.FC<RouteComponentProps<IUpdateMatchParams>> =
 
   const submit = (model: any) => {
     const { __typename, comments, createdAt, ...input } = model;
-    updateTaskMutation({
-      variables: { input }
-    })
-      .then(() => history.push('/'))
-      .catch(handleError);
+    // updateTaskMutation({
+    //   variables: { input }
+    // })
+    //   .then(() => history.push('/'))
+    //   .catch(handleError);
   }
 
   if (error) return <pre>{JSON.stringify(error)}</pre>;
