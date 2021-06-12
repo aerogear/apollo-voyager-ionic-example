@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "3.1.5",
-    "@capacitor/core": "2.4.1",
+    "@capacitor/core": "3.0.1",
     "@ionic/react": "5.1.1",
     "@ionic/react-router": "5.1.1",
     "@testing-library/jest-dom": "5.9.0",
@@ -62,7 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.4.1",
+    "@capacitor/cli": "3.0.1",
     "@types/simpl-schema": "0.2.7"
   },
   "description": "An Ionic project"
