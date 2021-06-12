@@ -7,7 +7,7 @@
   "devDependencies": {
     "del-cli": "3.0.1",
     "graphql": "15.3.0",
-    "graphback-cli": "0.14.0"
+    "graphback-cli": "1.1.2"
   },
   "scripts": {
     "start:server": "cd server && yarn start",
@@ -26,6 +26,6 @@
     "server"
   ],
   "resolutions": {
-    "@types/react": "16.9.36"
+    "@types/react": "17.0.11"
   }
 }
