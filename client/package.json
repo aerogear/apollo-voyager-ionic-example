@@ -9,11 +9,11 @@
     "@ionic/react-router": "5.1.1",
     "@testing-library/jest-dom": "5.9.0",
     "@testing-library/react": "11.0.4",
-    "@testing-library/user-event": "12.1.5",
+    "@testing-library/user-event": "13.1.9",
     "@types/jest": "26.0.13",
-    "@types/node": "12.12.47",
-    "@types/react": "16.9.36",
-    "@types/react-dom": "16.9.8",
+    "@types/node": "14.17.3",
+    "@types/react": "17.0.11",
+    "@types/react-dom": "17.0.7",
     "@types/react-router": "5.1.7",
     "@types/react-router-dom": "5.1.5",
     "apollo-link-context": "1.0.20",
@@ -21,7 +21,7 @@
     "graphql": "15.3.0",
     "graphql-tag": "2.11.0",
     "ionicons": "5.0.1",
-    "keycloak-js": "11.0.2",
+    "keycloak-js": "13.0.1",
     "offix-cache": "0.16.0-alpha2",
     "offix-client": "0.16.0-alpha2",
     "react": "16.13.1",
@@ -29,7 +29,7 @@
     "react-offix-hooks": "0.16.0-alpha2",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.3",
     "simpl-schema": "1.7.3",
     "subscriptions-transport-ws": "0.9.16",
     "typescript": "4.0.2",
@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.1",
-    "@types/simpl-schema": "0.2.7"
+    "@types/simpl-schema": "1.10.4"
   },
   "description": "An Ionic project"
 }
